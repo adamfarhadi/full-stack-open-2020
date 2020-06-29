@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import Filter from './components/Filter'
+import AddNewPerson from './components/AddNewPerson'
+import PrintPhonebook from './components/PrintPhonebook'
 
 const App = () =>
 {
@@ -48,45 +51,22 @@ const App = () =>
     setNewFilter(event.target.value)
   }
 
-  const printNumbers = () =>
-  {
-    let filteredPersons = persons.filter((person) => 
-      person.name.toLowerCase().indexOf(newFilter.toLowerCase()) !== -1
-    )
-
-    return (
-      <ul>
-        {filteredPersons.map(person =>
-          <li key={person.name}>
-            {person.name} {person.number}
-          </li>
-        )}
-      </ul>
-    )
-  }
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={newFilter} onChange={handleNewFilter} />
-      </div>
-      <h2>Add a new person</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNewPerson} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNewNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {printNumbers()}
+      <Filter filter={newFilter} filterHandler={handleNewFilter} />
+      <h3>Add a new person</h3>
+      <AddNewPerson
+        addPerson={addPerson}
+        newName={newName}
+        newNumber={newNumber}
+        handleNewPerson={handleNewPerson}
+        handleNewNumber={handleNewNumber}
+      />
+      <h3>Numbers</h3>
+      <PrintPhonebook persons={persons} newFilter={newFilter}/>
     </div>
   )
 }
 
-export default App;
+export default App
