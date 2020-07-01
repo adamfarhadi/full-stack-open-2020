@@ -1,6 +1,6 @@
 import React from 'react'
 
-const PrintCountries = ({ countries, filter }) => 
+const PrintCountries = ({ countries, filter, clickHandler }) => 
 {
   let filteredCountries = countries.filter((country) =>
     country.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
@@ -26,7 +26,7 @@ const PrintCountries = ({ countries, filter }) =>
             </li>
           )}
         </ul>
-        <img src={country.flag} alt={`flag of ${country.name}`} width="150"/>
+        <img src={country.flag} alt={`flag of ${country.name}`} width="150" />
       </>
     )
   }
@@ -38,9 +38,11 @@ const PrintCountries = ({ countries, filter }) =>
   {
     return (
       filteredCountries.map(country =>
-        <p key={country.alpha3Code}>
-          {country.name}
-        </p>
+        <div key={country.alpha3Code}>
+          <p>{country.name} {" "}
+            <button onClick={() => clickHandler(country.name)}>show</button>
+          </p>
+        </div>
       )
     )
   }

@@ -3,7 +3,8 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PrintCountries from './components/PrintCountries'
 
-function App() {
+function App()
+{
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
 
@@ -22,10 +23,15 @@ function App() {
     setFilter(event.target.value)
   }
 
+  const handleButtonClick = (country) =>
+  {
+    setFilter(country)
+  }
+
   return (
     <div>
       <Filter filter={filter} filterHandler={handleNewFilter} />
-      <PrintCountries countries={countries} filter={filter} />
+      <PrintCountries countries={countries} filter={filter} clickHandler={handleButtonClick}/>
     </div>
   )
 }
