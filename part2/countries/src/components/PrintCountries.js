@@ -1,4 +1,5 @@
 import React from 'react'
+import Weather from './Weather'
 
 const PrintCountries = ({ countries, filter, clickHandler }) => 
 {
@@ -27,6 +28,7 @@ const PrintCountries = ({ countries, filter, clickHandler }) =>
           )}
         </ul>
         <img src={country.flag} alt={`flag of ${country.name}`} width="150" />
+        <Weather city={country.capital}/>
       </>
     )
   }
