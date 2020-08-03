@@ -4,30 +4,25 @@ import AddNewPerson from './components/AddNewPerson'
 import PrintPhonebook from './components/PrintPhonebook'
 import personService from './services/persons'
 
-const App = () =>
-{
+const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     personService
       .getAll()
-      .then(initialPersons =>
-      {
+      .then(initialPersons => {
         setPersons(initialPersons)
       })
   }, [])
 
-  const addPerson = (event) =>
-  {
+  const addPerson = (event) => {
     event.preventDefault()
     if (newName === "" || newNumber === "") return
 
-    if (persons.some(person => person.name === newName))
-    {
+    if (persons.some(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
       return
     }
@@ -46,18 +41,15 @@ const App = () =>
       })
   }
 
-  const handleNewPerson = (event) =>
-  {
+  const handleNewPerson = (event) => {
     setNewName(event.target.value)
   }
 
-  const handleNewNumber = (event) =>
-  {
+  const handleNewNumber = (event) => {
     setNewNumber(event.target.value)
   }
 
-  const handleNewFilter = (event) =>
-  {
+  const handleNewFilter = (event) => {
     setNewFilter(event.target.value)
   }
 
@@ -74,7 +66,10 @@ const App = () =>
         handleNewNumber={handleNewNumber}
       />
       <h3>Numbers</h3>
-      <PrintPhonebook persons={persons} newFilter={newFilter} />
+      <PrintPhonebook
+        persons={persons}
+        newFilter={newFilter}
+        setPersons={setPersons} />
     </div>
   )
 }
