@@ -10,7 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-  const [notification, setNotification] = useState(null)
+  const [notification, setNotification] = useState({ message: null, type: null })
 
   useEffect(() => {
     personService
@@ -22,7 +22,24 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (newName === "" || newNumber === "") return
+
+    if (newName === "") {
+      setNotification({ ...notification, message: `Error: name field cannot be empty`, type: "error" })
+      setTimeout(() => {
+        setNotification({ ...notification, message: null, type: null })
+      }, 5000)
+
+      return
+    }
+
+    if (newNumber === "") {
+      setNotification({ ...notification, message: `Error: number field cannot be empty`, type: "error" })
+      setTimeout(() => {
+        setNotification({ ...notification, message: null, type: null })
+      }, 5000)
+
+      return
+    }
 
     if (persons.some(person => person.name === newName)) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
@@ -33,9 +50,22 @@ const App = () => {
           .update(personToChange.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
-            
-            setNotification(`Updated ${returnedPerson.name}`)
-            setTimeout(() => { setNotification(null) }, 5000)
+
+            setNotification({ ...notification, message: `Updated ${returnedPerson.name}`, type: "notification" })
+            setTimeout(() => {
+              setNotification({ ...notification, message: null, type: null })
+            }, 5000)
+          })
+          .catch(error => {
+            setNotification({
+              ...notification,
+              message: `Error: Information of ${personToChange.name} has already been removed from the server`,
+              type: "error"
+            })
+            setTimeout(() => {
+              setNotification({ ...notification, message: null, type: null })
+            }, 5000)
+            setPersons(persons.filter(p => p.id !== personToChange.id))
           })
       }
 
@@ -54,8 +84,10 @@ const App = () => {
         setNewName('')
         setNewNumber('')
 
-        setNotification(`Added ${returnedPerson.name}`)
-        setTimeout(() => { setNotification(null) }, 5000)
+        setNotification({ ...notification, message: `Added ${returnedPerson.name}`, type: "notification" })
+        setTimeout(() => {
+          setNotification({ ...notification, message: null, type: null })
+        }, 5000)
       })
   }
 
@@ -74,7 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification message={notification.message} type={notification.type} />
       <Filter filter={newFilter} filterHandler={handleNewFilter} />
       <h3>Add a new person</h3>
       <AddNewPerson
