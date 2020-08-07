@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter'
 import AddNewPerson from './components/AddNewPerson'
 import PrintPhonebook from './components/PrintPhonebook'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     personService
@@ -23,14 +25,17 @@ const App = () => {
     if (newName === "" || newNumber === "") return
 
     if (persons.some(person => person.name === newName)) {
-      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const personToChange = persons.find(p => p.name === newName)
-        const changedPerson = { ...personToChange, number: newNumber}
+        const changedPerson = { ...personToChange, number: newNumber }
 
         personService
-          .update(personToChange.id,changedPerson)
+          .update(personToChange.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
+            
+            setNotification(`Updated ${returnedPerson.name}`)
+            setTimeout(() => { setNotification(null) }, 5000)
           })
       }
 
@@ -48,6 +53,9 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+
+        setNotification(`Added ${returnedPerson.name}`)
+        setTimeout(() => { setNotification(null) }, 5000)
       })
   }
 
@@ -66,6 +74,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter filter={newFilter} filterHandler={handleNewFilter} />
       <h3>Add a new person</h3>
       <AddNewPerson
