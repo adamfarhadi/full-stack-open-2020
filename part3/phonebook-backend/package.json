@@ -7,8 +7,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf build && cd ../full-stack-open-2020/part3/phonebook-frontend/ && npm run build --prod && cp -r build ../../../full-stack-open-2020-p3 && cd ../../../full-stack-open-2020-p3",
-    "deploy": "git push heroku master",
+    "build:ui": "rm -rf build && cd ../phonebook-frontend/ && npm run build --prod && cp -r build ../phonebook-backend",
+    "deploy": "git push heroku-phonebook master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
