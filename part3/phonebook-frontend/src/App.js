@@ -50,22 +50,17 @@ const App = () => {
           .update(personToChange.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
-
             setNotification({ ...notification, message: `Updated ${returnedPerson.name}`, type: "notification" })
             setTimeout(() => {
               setNotification({ ...notification, message: null, type: null })
             }, 5000)
           })
           .catch(error => {
-            setNotification({
-              ...notification,
-              message: `Error: Information of ${personToChange.name} has already been removed from the server`,
-              type: "error"
-            })
+            setNotification({ ...notification, message: error.response.data.error, type: "error" })
             setTimeout(() => {
               setNotification({ ...notification, message: null, type: null })
             }, 5000)
-            setPersons(persons.filter(p => p.id !== personToChange.id))
+            // setPersons(persons.filter(p => p.id !== personToChange.id))
           })
       }
 
@@ -85,6 +80,12 @@ const App = () => {
         setNewNumber('')
 
         setNotification({ ...notification, message: `Added ${returnedPerson.name}`, type: "notification" })
+        setTimeout(() => {
+          setNotification({ ...notification, message: null, type: null })
+        }, 5000)
+      })
+      .catch(error => {
+        setNotification({ ...notification, message: error.response.data.error, type: "error" })
         setTimeout(() => {
           setNotification({ ...notification, message: null, type: null })
         }, 5000)

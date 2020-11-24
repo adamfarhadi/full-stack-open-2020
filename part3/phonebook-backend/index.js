@@ -28,15 +28,15 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
-  .then(person => {
-    if(person) {
-      response.json(person)
-    }
-    else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+    .then(person => {
+      if (person) {
+        response.json(person)
+      }
+      else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -47,27 +47,19 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
-  if (request.body.name === undefined) {
-    return response.status(400).json({
-      error: 'name missing'
-    })
-  }
-
-  if (request.body.number === undefined) {
-    return response.status(400).json({
-      error: 'number missing'
-    })
-  }
-
+app.post('/api/persons', (request, response, next) => {
   const person = new Person({
     name: request.body.name,
     number: request.body.number
   })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
+  person
+    .save()
+    .then(savedPerson => savedPerson.toJSON())
+    .then(savedAndFormattedPerson => {
+      response.json(savedAndFormattedPerson)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -76,7 +68,13 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: request.body.number,
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, {new: true})
+  const opts = {
+    new: true,
+    runValidators: true,
+    context: 'query',
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, opts)
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -90,11 +88,11 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
