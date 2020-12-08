@@ -48,6 +48,39 @@ test('a valid blog can be added', async () => {
   expect(titles).toContain(newBlog.title)
 })
 
+test('if likes property is missing in the request, defaults to 0', async () => {
+  const newBlog = {
+    title: 'How to make fried rice',
+    author: 'Dr. Fried McRice',
+    url: 'http://fried.rice'
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsinDB()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const titles = blogsAtEnd.map(blogs => blogs.title)
+  expect(titles).toContain(newBlog.title)
+
+  const returnedBlog = blogsAtEnd.find(blog => blog.title === newBlog.title)
+  expect(returnedBlog.likes).toEqual(0)
+})
+
+test('if title and url properties are missing, backend responds with 400 bad request', async () => {
+  const newBlog = {
+    author: 'Dr. Fried McRice',
+    likes: 23
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
