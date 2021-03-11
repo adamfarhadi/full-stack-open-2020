@@ -1,4 +1,4 @@
-# Full Stack Open 2020 - Deep Dive Into Modern Web Development
+# Full Stack Open 2021 - Deep Dive Into Modern Web Development
 My solutions for the full stack web development course offered by Open University at the University of Helsinki. A link to the course material can be found [here](https://fullstackopen.com/en) or by clicking on the headers for each individual part of the course below.
 
 ## Part 1 - [Introduction to React](https://fullstackopen.com/en/part1)
