@@ -54,10 +54,10 @@ const App = () => {
   const blogForm = () => (
     <>
       <h2>blogs</h2>
-      <p>{user.name} logged in </p>
-      <form onSubmit={handleLogout}>
-        <button type="submit">logout</button>
-      </form>
+      <p>
+        {user.name} logged in
+        <button onClick={handleLogout}>logout</button>
+      </p>
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
