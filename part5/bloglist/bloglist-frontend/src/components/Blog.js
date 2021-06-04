@@ -34,14 +34,16 @@ const Blog = ({ blog, refreshBlogs, user }) => {
     }
   }
 
-  const handleDelete = async (event) => {
+  const handleRemove = async (event) => {
     event.preventDefault()
 
-    try {
-      await blogService.remove(blog.id)
-      refreshBlogs()
-    } catch (error) {
-      console.log(error)
+    if(window.confirm(`Are you sure you want to remove blog \"${blog.title}\" by \"${blog.author}\"?`)) {
+      try {
+        await blogService.remove(blog.id)
+        refreshBlogs()
+      } catch (error) {
+        console.log(error)
+      }
     }
   } 
 
@@ -61,7 +63,7 @@ const Blog = ({ blog, refreshBlogs, user }) => {
         <div>url: {blog.url}</div>
         <div>likes: {blog.likes} {" "} <button onClick={handleLike}>like</button></div>
         <div>added by: {blog.user.name}</div>
-        {isOwnedByUser ? <div><button onClick={handleDelete}>remove</button></div> : null}
+        {isOwnedByUser ? <div><button onClick={handleRemove}>remove</button></div> : null}
       </div>
     </div>
   )
