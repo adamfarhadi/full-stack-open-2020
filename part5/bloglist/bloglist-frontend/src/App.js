@@ -17,11 +17,6 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  // useEffect(async () => {
-  //   const blogs = await blogService.getAll()
-  //   setBlogs(blogs)
-  // }, [])
-
   useEffect(() => {
     refreshBlogs()
   }, [])
@@ -107,9 +102,10 @@ const App = () => {
 
       <br></br>
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} refreshBlogs={refreshBlogs} />
-      )}
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog => <Blog key={blog.id} blog={blog} refreshBlogs={refreshBlogs} />)
+      }
     </>
   )
 
