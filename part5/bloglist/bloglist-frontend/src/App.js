@@ -66,11 +66,6 @@ const App = () => {
   const addBlog = async (blogObject) => {
 
     try {
-      // const returnedBlog = await blogService.create(blogObject)
-      // blogFormRef.current.toggleVisibility()
-
-      // setBlogs(blogs.concat(returnedBlog))
-
       blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
 
