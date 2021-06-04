@@ -70,6 +70,7 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
 
       setBlogs(blogs.concat(returnedBlog))
+      this.forceUpdate();
       setNotification({ ...notification, message: `a new blog \"${returnedBlog.title}\" added`, type: "notification" })
       setTimeout(() => {
         setNotification({ ...notification, message: null, type: null })
@@ -104,7 +105,7 @@ const App = () => {
 
       {blogs
         .sort((a, b) => b.likes - a.likes)
-        .map(blog => <Blog key={blog.id} blog={blog} refreshBlogs={refreshBlogs} />)
+        .map(blog => <Blog key={blog.id} blog={blog} refreshBlogs={refreshBlogs} user={user} />)
       }
     </>
   )
