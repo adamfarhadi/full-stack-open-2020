@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import Blog from './components/Blog'
-import AddNewBlog from './components/AddNewBlog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,10 +13,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [notification, setNotification] = useState({ message: null, type: null })
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -48,9 +48,9 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       setNotification({ ...notification, message: `invalid username or password`, type: "error" })
-        setTimeout(() => {
-          setNotification({ ...notification, message: null, type: null })
-        }, 5000)
+      setTimeout(() => {
+        setNotification({ ...notification, message: null, type: null })
+      }, 5000)
     }
   }
 
@@ -65,64 +65,24 @@ const App = () => {
     setPassword('')
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
+  const addBlog = async (blogObject) => {
 
-    if (newTitle === "") {
-      setNotification({ ...notification, message: `Error: title field cannot be empty`, type: "error" })
+    try {
+      blogFormRef.current.toggleVisibility()
+
+      const returnedBlog = await blogService.create(blogObject)
+      
+      setBlogs(blogs.concat(returnedBlog))
+      setNotification({ ...notification, message: `a new blog \"${returnedBlog.title}\" added`, type: "notification" })
       setTimeout(() => {
         setNotification({ ...notification, message: null, type: null })
       }, 5000)
-
-      return
-    }
-
-    if (newUrl === "") {
-      setNotification({ ...notification, message: `Error: url field cannot be empty`, type: "error" })
+    } catch (exception) {
+      setNotification({ ...notification, message: exception.response.data.error, type: "error" })
       setTimeout(() => {
         setNotification({ ...notification, message: null, type: null })
       }, 5000)
-
-      return
     }
-
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-
-    blogService
-      .create(newBlog)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
-
-        setNotification({ ...notification, message: `a new blog \"${returnedBlog.title}\" added`, type: "notification" })
-        setTimeout(() => {
-          setNotification({ ...notification, message: null, type: null })
-        }, 5000)
-      })
-      .catch(error => {
-        setNotification({ ...notification, message: error.response.data.error, type: "error" })
-        setTimeout(() => {
-          setNotification({ ...notification, message: null, type: null })
-        }, 5000)
-      })
-  }
-
-  const handleNewTitle = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleNewAuthor = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleNewUrl = (event) => {
-    setNewUrl(event.target.value)
   }
 
   const blogForm = () => (
@@ -134,16 +94,9 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      <h2>create new</h2>
-      <AddNewBlog
-        addBlog={addBlog}
-        newTitle={newTitle}
-        newAuthor={newAuthor}
-        newUrl={newUrl}
-        handleNewTitle={handleNewTitle}
-        handleNewAuthor={handleNewAuthor}
-        handleNewUrl={handleNewUrl}
-      />
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <BlogForm createBlog={addBlog}></BlogForm>
+      </Togglable>
 
       <br></br>
 
