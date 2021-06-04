@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AddNewBlog = ({ addBlog, newTitle, newAuthor, newUrl, handleNewTitle, handleNewAuthor, handleNewUrl }) => 
+const AddNewBlog = ({ addBlog, newTitle, newAuthor, newUrl, handleNewTitle, handleNewAuthor, handleNewUrl }) =>
 {
   return (
     <form onSubmit={addBlog}>

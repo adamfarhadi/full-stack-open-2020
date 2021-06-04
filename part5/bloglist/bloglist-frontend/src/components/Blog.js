@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 
-import blogService from '../services/blogs'
-
 const Blog = ({ blog, user, handleLike, handleRemove }) => {
   const [visible, setVisible] = useState(false)
 
@@ -26,17 +24,17 @@ const Blog = ({ blog, user, handleLike, handleRemove }) => {
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
         <div>
-          {blog.title} - {blog.author} {" "}
+          {blog.title} - {blog.author} {' '}
           <button onClick={toggleVisibility}>view</button>
         </div>
       </div>
       <div style={showWhenVisible}>
         <div>
-          {blog.title} - {blog.author} {" "}
+          {blog.title} - {blog.author} {' '}
           <button onClick={toggleVisibility}>hide</button>
         </div>
         <div>url: {blog.url}</div>
-        <div>likes: {blog.likes} {" "} <button onClick={() => handleLike(blog)}>like</button></div>
+        <div>likes: {blog.likes} {' '} <button onClick={() => handleLike(blog)}>like</button></div>
         <div>added by: {blog.user.name}</div>
         {isOwnedByUser ? <div><button onClick={() => handleRemove(blog)}>remove</button></div> : null}
       </div>

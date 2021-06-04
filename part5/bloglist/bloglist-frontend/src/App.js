@@ -45,7 +45,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setNotification({ ...notification, message: `invalid username or password`, type: "error" })
+      setNotification({ ...notification, message: 'invalid username or password', type: 'error' })
       setTimeout(() => {
         setNotification({ ...notification, message: null, type: null })
       }, 5000)
@@ -71,12 +71,12 @@ const App = () => {
 
       await refreshBlogs()
 
-      setNotification({ ...notification, message: `a new blog \"${returnedBlog.title}\" added`, type: "notification" })
+      setNotification({ ...notification, message: `a new blog "${returnedBlog.title}" added`, type: 'notification' })
       setTimeout(() => {
         setNotification({ ...notification, message: null, type: null })
       }, 5000)
     } catch (exception) {
-      setNotification({ ...notification, message: exception.response.data.error, type: "error" })
+      setNotification({ ...notification, message: exception.response.data.error, type: 'error' })
       setTimeout(() => {
         setNotification({ ...notification, message: null, type: null })
       }, 5000)
@@ -90,7 +90,7 @@ const App = () => {
       await blogService.update(blog.id, updatedBlog)
       refreshBlogs()
     } catch (exception) {
-      setNotification({ ...notification, message: exception.response.data.error, type: "error" })
+      setNotification({ ...notification, message: exception.response.data.error, type: 'error' })
       setTimeout(() => {
         setNotification({ ...notification, message: null, type: null })
       }, 5000)
@@ -99,17 +99,17 @@ const App = () => {
 
   const handleRemove = async (blog) => {
 
-    if (window.confirm(`Are you sure you want to remove blog \"${blog.title}\" by \"${blog.author}\"?`)) {
+    if (window.confirm(`Are you sure you want to remove blog "${blog.title}" by "${blog.author}"?`)) {
       try {
-        const returnedBlog = await blogService.remove(blog.id)
+        await blogService.remove(blog.id)
         await refreshBlogs()
 
-        setNotification({ ...notification, message: `blog \"${blog.title}\" by \"${blog.author}\" removed`, type: "notification" })
+        setNotification({ ...notification, message: `blog "${blog.title}" by "${blog.author}" removed`, type: 'notification' })
         setTimeout(() => {
           setNotification({ ...notification, message: null, type: null })
         }, 5000)
       } catch (exception) {
-        setNotification({ ...notification, message: exception.response.data.error, type: "error" })
+        setNotification({ ...notification, message: exception.response.data.error, type: 'error' })
         setTimeout(() => {
           setNotification({ ...notification, message: null, type: null })
         }, 5000)
