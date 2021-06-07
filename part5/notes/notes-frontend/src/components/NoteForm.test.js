@@ -14,7 +14,7 @@ test('<NoteForm /> updates parent state and calls onSubmit', () => {
   const form = component.container.querySelector('form')
 
   fireEvent.change(input, {
-    target: { value: 'testing of forms could be easier' } 
+    target: { value: 'testing of forms could be easier' }
   })
   fireEvent.submit(form)
 
