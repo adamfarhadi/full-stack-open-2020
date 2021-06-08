@@ -63,7 +63,7 @@ describe('Blog app', function () {
         cy.get('.blogLikes').contains('likes: 1')
       })
 
-      it.only('A user can delete a blog', function () {
+      it('A user can delete a blog', function () {
         cy.contains('new blog').click()
         cy.get('#title').type('testBlog')
         cy.get('#author').type('testAuthor')
@@ -75,9 +75,24 @@ describe('Blog app', function () {
         cy.on('window:confirm', () => true)
         cy.wait(5000)
 
-        cy.get('.blogForm').should('not.contain','testBlog')
-          .and('not.contain','testAuthor')
-          .and('not.contain','url.test')
+        cy.get('.blogForm').should('not.contain', 'testBlog')
+          .and('not.contain', 'testAuthor')
+          .and('not.contain', 'url.test')
+      })
+
+      it.only('Blogs are ordered according to likes', function () {
+        cy.createBlog({ title: 'testBlog1', author: 'testAuthor1', url: 'testUrl1', likes: 43 })
+        cy.createBlog({ title: 'testBlog2', author: 'testAuthor2', url: 'testUrl2', likes: 586 })
+        cy.createBlog({ title: 'testBlog3', author: 'testAuthor3', url: 'testUrl3', likes: 22 })
+        cy.createBlog({ title: 'testBlog4', author: 'testAuthor4', url: 'testUrl4', likes: 271 })
+
+        cy.get('.viewHideDetails').should('have.length', 4).click({ multiple: true })
+        cy.get('.likes').then(likes => {
+          cy.get(likes[0]).should('contain', 586)
+          cy.get(likes[1]).should('contain', 271)
+          cy.get(likes[2]).should('contain', 43)
+          cy.get(likes[3]).should('contain', 22)
+        })
       })
     })
   })

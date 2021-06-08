@@ -27,7 +27,7 @@ const Blog = ({ blog, user, handleLike, handleRemove }) => {
       return (
         <div>
           <div className='blogUrl'>url: {blog.url}</div>
-          <div className='blogLikes'>likes: {blog.likes} {' '} <button id="like-button" onClick={() => handleLike(blog)}>like</button></div>
+          <div className='blogLikes'>likes: <span className='likes'>{blog.likes}</span> {' '} <button id="like-button" onClick={() => handleLike(blog)}>like</button></div>
           <div>added by: {blog.user.name}</div>
           {isOwnedByUser ? <div><button id='remove-button' onClick={() => handleRemove(blog)}>remove</button></div> : null}
         </div>
@@ -38,7 +38,7 @@ const Blog = ({ blog, user, handleLike, handleRemove }) => {
     <div style={blogStyle} className='blog'>
       <div className='blogTitleAndAuthor'>
         {blog.title} - {blog.author} {' '}
-        <button onClick={toggleVisibility}>{viewHideText()}</button>
+        <button className='viewHideDetails' onClick={toggleVisibility}>{viewHideText()}</button>
       </div>
       {extraInfo()}
     </div>
